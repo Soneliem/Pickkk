@@ -20,6 +20,7 @@ class _NavState extends State<Nav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
@@ -27,6 +28,7 @@ class _NavState extends State<Nav> {
           backgroundColor: Color(0xff251F34),
           color: Color(0xFF3B324E),
           height: 50,
+          animationDuration: Duration(milliseconds: 400),
           items: const <Widget>[
             Icon(
               Icons.account_circle,
