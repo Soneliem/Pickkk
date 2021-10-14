@@ -17,6 +17,7 @@ dependencies:
   dio: ^4.0.0
   loading_overlay: ^0.3.0
   flutter_native_splash: ^1.2.4
+  flutter_keyboard_visibility: ^5.0.3
 
 dev_dependencies:
   flutter_test:
