@@ -2,9 +2,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:valorant_client/valorant_client.dart';
-import 'package:dio/dio.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import '../vclient.dart';
 
 class Account extends StatefulWidget {
   Account({Key? key}) : super(key: key);
@@ -45,27 +45,14 @@ class _AccountState extends State<Account> {
     super.dispose();
   }
 
-  Future<bool> authenticate(
+  Future<bool> forceAuth(
       String username, String password, Region region) async {
     bool output;
     setState(() {
       _isLoading = true;
     });
-    ValorantClient client = ValorantClient(
-      UserDetails(userName: username, password: password, region: region),
-      callback: Callback(
-        onError: (String error) {
-          print(error);
-          output = false;
-        },
-        onRequestError: (DioError error) {
-          print(error.message);
-          output = false;
-        },
-      ),
-    );
 
-    await client.init(true);
+    await authenticate(username, password, region);
 
     final user = await client.playerInterface.getPlayer();
     if (user != null) {
@@ -169,7 +156,7 @@ class _AccountState extends State<Account> {
                 transform: Matrix4.translationValues(
                     0, isKeyboardVisible ? 50 : _loginYOffset, 1),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF040405),
+                  color: Color(0xff251F34),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(25),
                       topRight: Radius.circular(25)),
@@ -297,7 +284,7 @@ class _AccountState extends State<Account> {
                             GestureDetector(
                               onTap: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  if (!await authenticate(
+                                  if (!await forceAuth(
                                       usernameController.text,
                                       passwordController.text,
                                       _selectedRegion.region)) {
