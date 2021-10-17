@@ -1,5 +1,4 @@
 // ignore_for_file: file_names
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:valorant_client/valorant_client.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -7,7 +6,7 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../vclient.dart';
 
 class Account extends StatefulWidget {
-  Account({Key? key}) : super(key: key);
+  const Account({Key? key}) : super(key: key);
 
   @override
   _AccountState createState() => _AccountState();
@@ -78,6 +77,7 @@ class _AccountState extends State<Account> {
       case 0:
         _loginYOffset = windowHeight;
         _backgroundColor = const Color(0xff251F34);
+        _loginHeight = 0;
         break;
       case 1:
         _backgroundColor = const Color(0xFF3B324E);
@@ -94,7 +94,7 @@ class _AccountState extends State<Account> {
             children: <Widget>[
               GestureDetector(
                 child: AnimatedContainer(
-                  duration: Duration(seconds: 1),
+                  duration: const Duration(seconds: 1),
                   curve: Curves.fastLinearToSlowEaseIn,
                   color: _backgroundColor,
                   child: Column(
@@ -123,12 +123,10 @@ class _AccountState extends State<Account> {
                           )
                         ],
                       ),
-                      Container(
-                        child: const Center(
-                          child: Text(
-                            'Status',
-                            style: TextStyle(color: Colors.white, fontSize: 24),
-                          ),
+                      const Center(
+                        child: Text(
+                          'Status',
+                          style: TextStyle(color: Colors.white, fontSize: 24),
                         ),
                       ),
                       Container(
@@ -240,7 +238,7 @@ class _AccountState extends State<Account> {
                                   Expanded(
                                     child: DropdownButtonHideUnderline(
                                       child: DropdownButton<Regions>(
-                                        dropdownColor: Color(0xff14DAE2),
+                                        dropdownColor: const Color(0xff14DAE2),
                                         style: (const TextStyle(
                                             color: Colors.white,
                                             fontWeight: FontWeight.w500,
@@ -315,7 +313,7 @@ class _AccountState extends State<Account> {
                                   }
                                 }
                               },
-                              child: Button(
+                              child: const Button(
                                 btnText: "Log In",
                                 isFull: true,
                               ),
@@ -345,7 +343,8 @@ class Regions {
 }
 
 class Button extends StatefulWidget {
-  Button({required this.btnText, required this.isFull});
+  const Button({Key? key, required this.btnText, required this.isFull})
+      : super(key: key);
 
   final String btnText;
   final bool isFull;
@@ -355,13 +354,13 @@ class Button extends StatefulWidget {
 }
 
 class _ButtonState extends State<Button> {
-  Color btnColor = Color.fromRGBO(0, 0, 0, 0);
+  Color btnColor = const Color.fromRGBO(0, 0, 0, 0);
   Color btnTextColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     if (widget.isFull) {
-      btnColor = Color(0xff14DAE2);
+      btnColor = const Color(0xff14DAE2);
       btnTextColor = Colors.black;
     }
     return Container(
@@ -412,7 +411,7 @@ class _InputWithIconState extends State<InputWithIcon> {
               child: Icon(
                 widget.icon,
                 size: 20,
-                color: Color(0xffbb9b9b9),
+                color: const Color(0xffbb9b9b9),
               )),
           Expanded(
             child: TextFormField(

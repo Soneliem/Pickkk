@@ -14,7 +14,7 @@ class _SettingsState extends State<Settings> {
   Widget build(BuildContext context) {
     return const Center(
         child: Text(
-      'Home',
+      'Settings',
       style: TextStyle(color: Colors.white),
     ));
   }

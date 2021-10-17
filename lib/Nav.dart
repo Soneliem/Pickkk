@@ -13,29 +13,26 @@ class Nav extends StatefulWidget {
 }
 
 class _NavState extends State<Nav> {
-  int _selectedIndex = 1;
+  final _pageController = PageController(initialPage: 1, keepPage: true);
   List<Widget> _widgetOptions = <Widget>[Account(), Home(), Settings()];
+  int currentPage = 1;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: PageTransitionSwitcher(
-        transitionBuilder: (
-          child,
-          animation,
-          secondaryAnimation,
-        ) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.vertical,
-            child: child,
-          );
+      body: PageView(
+        controller: _pageController,
+        children: _widgetOptions,
+        onPageChanged: (index) {
+          setState(() {
+            _pageController.jumpToPage(index);
+            currentPage = index;
+          });
         },
-        child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: CurvedNavigationBar(
+          index: currentPage,
           backgroundColor: Color(0xff251F34),
           color: Color(0xFF3B324E),
           height: 50,
@@ -59,7 +56,7 @@ class _NavState extends State<Nav> {
           ],
           onTap: (index) {
             setState(() {
-              _selectedIndex = index;
+              _pageController.jumpToPage(index);
             });
           }),
     );
