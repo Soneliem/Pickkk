@@ -4,6 +4,7 @@ import 'package:valorant_client/valorant_client.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../vclient.dart';
+import '../custom.dart';
 
 class Account extends StatefulWidget {
   const Account({Key? key}) : super(key: key);
@@ -13,7 +14,7 @@ class Account extends StatefulWidget {
 }
 
 class _AccountState extends State<Account> {
-  String IGN = "";
+  String IGN = "Unknown";
   TextEditingController passwordController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   double windowHeight = 0;
@@ -31,7 +32,7 @@ class _AccountState extends State<Account> {
 
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
-  bool _isNotAuthenticated = true;
+
   double _loginHeight = 0;
   double _loginYOffset = 0;
   int _pageState = 0;
@@ -65,6 +66,23 @@ class _AccountState extends State<Account> {
       _isLoading = false;
     });
     return output;
+  }
+
+  checkAuth() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (client != null) {
+      final user = await client.playerInterface.getPlayer();
+      IGN = "Authenticated as: " "\n\n" + user.gameName;
+    } else {
+      IGN = "Not Authenticated";
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -123,24 +141,34 @@ class _AccountState extends State<Account> {
                           )
                         ],
                       ),
-                      const Center(
-                        child: Text(
-                          'Status',
-                          style: TextStyle(color: Colors.white, fontSize: 24),
-                        ),
+                      Column(
+                        children: [
+                          const Text(
+                            'Status',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 26,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            IGN,
+                            style: const TextStyle(
+                                color: Color(0xffbc7c7c7), fontSize: 20),
+                          ),
+                          Button(
+                              btnText: "Check Authentication",
+                              onTap: checkAuth,
+                              isFull: true)
+                        ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(32),
-                        child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _pageState = 1;
-                              });
-                            },
-                            child: Button(
-                              btnText: "Log In Again",
-                              isFull: _isNotAuthenticated,
-                            )),
+                      Button(
+                        btnText: "Log In",
+                        onTap: () {
+                          setState(() {
+                            _pageState = 1;
+                          });
+                        },
+                        isFull: false,
                       ),
                     ],
                   ),
@@ -272,54 +300,43 @@ class _AccountState extends State<Account> {
                                 ],
                               ),
                             ),
-                            const SizedBox(
-                              height: 25,
-                            ),
                           ],
                         ),
-                        Column(
-                          children: <Widget>[
-                            GestureDetector(
-                              onTap: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  if (!await forceAuth(
-                                      usernameController.text,
-                                      passwordController.text,
-                                      _selectedRegion.region)) {
-                                    final snackBar = SnackBar(
-                                      content: const Text(
-                                        'ERROR! Authentication Failed',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      padding: const EdgeInsets.all(8.0),
-                                      margin: const EdgeInsets.all(10),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: Colors.red,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    );
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(snackBar);
-                                  } else {
-                                    setState(() {
-                                      _pageState = 0;
-                                      _isNotAuthenticated = false;
-                                    });
-                                  }
-                                }
-                              },
-                              child: const Button(
-                                btnText: "Log In",
-                                isFull: true,
-                              ),
-                            ),
-                          ],
-                        )
+                        Button(
+                          btnText: "Log In",
+                          onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              if (!await forceAuth(
+                                  usernameController.text,
+                                  passwordController.text,
+                                  _selectedRegion.region)) {
+                                final snackBar = SnackBar(
+                                  content: const Text(
+                                    'ERROR! Authentication Failed',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  margin: const EdgeInsets.all(10),
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.red,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                );
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(snackBar);
+                              } else {
+                                setState(() {
+                                  _pageState = 0;
+                                });
+                              }
+                            }
+                          },
+                          isFull: true,
+                        ),
                       ],
                     ),
                   ),
@@ -340,101 +357,4 @@ class Regions {
   final Region region;
 
   bool operator ==(o) => o is Regions && o.name == name && o.region == region;
-}
-
-class Button extends StatefulWidget {
-  const Button({Key? key, required this.btnText, required this.isFull})
-      : super(key: key);
-
-  final String btnText;
-  final bool isFull;
-
-  @override
-  _ButtonState createState() => _ButtonState();
-}
-
-class _ButtonState extends State<Button> {
-  Color btnColor = const Color.fromRGBO(0, 0, 0, 0);
-  Color btnTextColor = Colors.white;
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.isFull) {
-      btnColor = const Color(0xff14DAE2);
-      btnTextColor = Colors.black;
-    }
-    return Container(
-      padding: const EdgeInsets.all(20),
-      width: double.infinity,
-      decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xff14DAE2), width: 2),
-          color: btnColor,
-          borderRadius: BorderRadius.circular(50)),
-      child: Center(
-        child: Text(
-          widget.btnText,
-          style: TextStyle(
-              color: btnTextColor, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-}
-
-class InputWithIcon extends StatefulWidget {
-  InputWithIcon(
-      {required this.icon,
-      required this.hint,
-      required this.controller,
-      required this.obscure});
-
-  final TextEditingController controller;
-  final String hint;
-  final IconData icon;
-  final bool obscure;
-
-  @override
-  _InputWithIconState createState() => _InputWithIconState();
-}
-
-class _InputWithIconState extends State<InputWithIcon> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xffbc7c7c7), width: 2),
-          borderRadius: BorderRadius.circular(50)),
-      child: Row(
-        children: <Widget>[
-          SizedBox(
-              width: 60,
-              child: Icon(
-                widget.icon,
-                size: 20,
-                color: const Color(0xffbb9b9b9),
-              )),
-          Expanded(
-            child: TextFormField(
-              controller: widget.controller,
-              obscureText: widget.obscure,
-              validator: (text) {
-                if (text == null || text.isEmpty) {
-                  return 'Required';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 20),
-                  border: InputBorder.none,
-                  hintText: widget.hint,
-                  hintStyle: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w400)),
-              style: (const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w400)),
-            ),
-          )
-        ],
-      ),
-    );
-  }
 }

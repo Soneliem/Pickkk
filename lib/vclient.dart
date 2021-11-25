@@ -1,5 +1,7 @@
-import 'package:valorant_client/valorant_client.dart';
+// All ValorantClient stuff
+
 import 'package:dio/dio.dart';
+import 'package:valorant_client/valorant_client.dart';
 
 dynamic client;
 

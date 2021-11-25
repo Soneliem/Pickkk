@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, file_names, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
-import 'package:animations/animations.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:pickkk/Pages/Account.dart';
 import 'package:pickkk/Pages/Home.dart';
@@ -14,7 +13,7 @@ class Nav extends StatefulWidget {
 
 class _NavState extends State<Nav> {
   final _pageController = PageController(initialPage: 1, keepPage: true);
-  List<Widget> _widgetOptions = <Widget>[Account(), Home(), Settings()];
+  final List<Widget> _widgetOptions = <Widget>[Account(), Home(), Settings()];
   int currentPage = 1;
 
   @override

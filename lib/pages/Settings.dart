@@ -12,10 +12,32 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-        child: Text(
-      'Settings',
-      style: TextStyle(color: Colors.white),
-    ));
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 100),
+              child: const Text(
+                "Settings",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: const Text(
+                "Change In App Settings here",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            )
+          ],
+        ),
+      ],
+    );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pickkk/Nav.dart';
+import 'package:pickkk/nav.dart';
 
 void main() => runApp(MyApp());
 
@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
       title: 'Pickkk!',
       theme: ThemeData(
           fontFamily: "Nunito",
-          backgroundColor: Color(0xff251F34),
-          scaffoldBackgroundColor: Color(0xff251F34)),
+          backgroundColor: const Color(0xff251F34),
+          scaffoldBackgroundColor: const Color(0xff251F34)),
       home: Nav(),
     );
   }
